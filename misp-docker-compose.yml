@@ -88,10 +88,10 @@ volumes:
   misp_gnupg:
   	
   	
-  	------
+#  	------
   	
   	
-  	login
-  	sync actions ->feeds-> load deafult-> check bix select all feeds-> enable -> store
-  	now go to home 
+ # 	login
+ # 	sync actions ->feeds-> load deafult-> check b0x select all feeds-> enable -> store
+ # 	now go to home 
   	
