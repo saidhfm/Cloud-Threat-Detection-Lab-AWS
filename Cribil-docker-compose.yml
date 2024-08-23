@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  cribl:
+    image: cribl/cribl:latest
+    container_name: cribl
+    restart: unless-stopped
+    environment:
+      - CRIBL_UID=1000
+      - CRIBL_GID=1000
+    volumes:
+      - cribl_data:/opt/cribl/data
+      - cribl_local:/opt/cribl/local
+    ports:
+      - "9000:9000"
+      - "10080:10080"
+      - "9111:9111"
+    networks:
+      - cribl_network
+
+volumes:
+  cribl_data:
+    driver: local
+  cribl_local:
+    driver: local
+
+networks:
+  cribl_network:
+    driver: bridge
+
+
+
+      docker compose -f compose.yml up -d
+
+access on http://[pip]:9000 port
+      admin,admin - deafult-> login first do this
+      
+
+      i have addedd 9111 port to add in elastic settings - http://172.31.36.119:9111
+
+      admin,Password123@
+

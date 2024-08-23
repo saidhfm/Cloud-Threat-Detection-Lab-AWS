@@ -1,0 +1,6 @@
+https://github.com/stamparm/DSVW.git
+
+python3 dsvw.py
+
+open python file change ip to 0.0.0.0 and port to 80 or what evr u wish
+

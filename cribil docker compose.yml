@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  cribl:
+    image: cribl/cribl:latest
+    container_name: cribl
+    restart: unless-stopped
+    environment:
+      - CRIBL_UID=1000
+      - CRIBL_GID=1000
+    volumes:
+      - cribl_data:/opt/cribl/data
+      - cribl_local:/opt/cribl/local
+    ports:
+      - "9000:9000"
+      - "10080:10080"
+    networks:
+      - cribl_network
+
+volumes:
+  cribl_data:
+    driver: local
+  cribl_local:
+    driver: local
+
+networks:
+  cribl_network:
+    driver: bridge
+
+
+
+
+    username and password admin admin
+    

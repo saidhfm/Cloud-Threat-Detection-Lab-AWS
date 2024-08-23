@@ -1,0 +1,32 @@
+cspm integration elk
+first create a policy cspm in was and then add integration cspm
+to deploy manually
+create a ec2 and attach a role
+with name arn:aws:iam::590184048130:role/cloudbeat-securityaudit
+Permissions policies - SecurityAudit
+trust poliy - {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::590184048130:root"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::590184048130:role/cloudbeat-securityaudit"
+            },
+            "Action": "sts:AssumeRole"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
