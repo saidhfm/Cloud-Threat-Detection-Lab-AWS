@@ -181,7 +181,7 @@ volumes:
   kibanadata:
     driver: local
 
------------------------------------
+#-----------------------------------
 #https://docs.docker.com/engine/install/ubuntu/
 #https://docs.docker.com/engine/install/linux-postinstall/
 #https://docs.docker.com/compose/install/linux/ - docker compose installation
