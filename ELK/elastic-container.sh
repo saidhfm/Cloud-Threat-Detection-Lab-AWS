@@ -215,7 +215,7 @@ case "${ACTION}" in
 
   echo "Starting Elastic Stack network and containers."
 
-  ${COMPOSE} up -d --no-deps 
+  ${COMPOSE} up -d --no-deps
 
   configure_kbn 1>&2 2>&3
 
@@ -239,7 +239,7 @@ case "${ACTION}" in
 "stop")
   echo "Stopping running containers."
 
-  ${COMPOSE} stop 
+  ${COMPOSE} stop
   ;;
 
 "destroy")
