@@ -30,3 +30,29 @@ trust poliy - {
         }
     ]
 }
+-----
+
+
+{
+ "Version": "2012-10-17",
+ "Id": "example-ID",
+ "Statement": [
+ {
+ "Sid": "example-statement-ID",
+ "Effect": "Allow",
+ "Principal": {
+ "Service": "s3.amazonaws.com"
+ },
+ "Action": "SQS:SendMessage",
+ "Resource": "arn:aws:sqs:us-east-1:590184048130:myqueue",
+ "Condition": {
+ "StringEquals": {
+ "aws:SourceAccount": "590184048130"
+ },
+ "ArnLike": {
+ "aws:SourceArn": "arn:aws:s3:::aws-cloudtraillogs-590184048130-245a3a85"
+ }
+ }
+ }
+ ]
+}
