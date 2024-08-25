@@ -464,8 +464,8 @@ We welcome your contributions. Please feel free to fork the code, play with it, 
 **Issues**
 
 - Please [open an issue on GitHub]([https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS/issues]](https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS/issues)
-- if you'd like to report a bug or request a feature.
-- 
+  if you'd like to report a bug or request a feature.
+  
 
 
 References:
