@@ -463,7 +463,7 @@ We welcome your contributions. Please feel free to fork the code, play with it, 
 
 **🙏Support**
 
-- Please [open an issue on GitHub](https://github.com/archanchoudhury/SOC-OpenSource/issues/new) if you'd like to report a bug or request a feature.
+- Please [open an issue on GitHub]([https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS/issues]](https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS/issues) if you'd like to report a bug or request a feature.
 
 References used:
 https://github.com/peasead/elastic-container
