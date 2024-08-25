@@ -452,3 +452,9 @@ This setup configures Cribl to send logs or data to Splunk, allowing for central
     - New Relic offers 100GB of free data ingestion per month, so you can monitor your data usage accordingly. Access on http://[pip]:9000
 
 This setup allows Cribl to send events and logs to New Relic for monitoring and analysis.
+
+Refrences used:
+https://github.com/peasead/elastic-container
+https://github.com/NUKIB/misp/tree/main
+https://github.com/sakshamtushar/thor-detection-lab
+
