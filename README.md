@@ -465,7 +465,7 @@ We welcome your contributions. Please feel free to fork the code, play with it, 
 
 - Please [open an issue on GitHub](https://github.com/archanchoudhury/SOC-OpenSource/issues/new) if you'd like to report a bug or request a feature.
 
-Refrences used:
+References used:
 https://github.com/peasead/elastic-container
 https://github.com/NUKIB/misp/tree/main
 https://github.com/sakshamtushar/thor-detection-lab
