@@ -1,4 +1,5 @@
 ## **CloudSOC-OpenSource**
+created by - https://www.linkedin.com/in/saibatchu/
 
 CloudSOC-OpenSource is a project designed for security analysts and SOC (Security Operations Center) professionals interested in implementing and exploring a modern CloudSOC architecture using open-source tools. The project is ongoing, with continuous updates and new additions to the repository.
 
