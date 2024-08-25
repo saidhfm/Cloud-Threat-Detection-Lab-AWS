@@ -1,35 +1,3 @@
-version: '2.4'
-
-volumes:
-  opt-splunk-etc: {}
-  opt-splunk-var: {}
-
-services:
-  splunkenterprise:
-    container_name: splunk-lab
-    hostname: splunkenterprise
-    image: splunk/splunk:latest
-    mem_limit: 2G
-    environment:
-      - SPLUNK_START_ARGS=--accept-license
-      - SPLUNK_ENABLE_LISTEN=9997
-      - SPLUNK_ADD=tcp 1514
-      - SPLUNK_PASSWORD=Password123@
-    volumes:
-      - opt-splunk-etc:/opt/splunk/etc
-      - opt-splunk-var:/opt/splunk/var
-    ports:
-      - "8000:8000"
-      - "9997:9997"
-      - "8088:8088"
-      - "1514:1514"
-      - "8089:8089"
-
-
-
-      docker compose -f splunk-compose.yml up -d
-      http://3.135.238.39:8000/
-      
 version: '3'
 
 volumes:
@@ -55,3 +23,6 @@ services:
       - "8088:8088"
       - "1514:1514"
       - "8089:8089"
+
+#docker compose -f splunk-compose.yml up -d
+#http://PIP:8000/
