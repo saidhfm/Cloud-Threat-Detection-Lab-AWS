@@ -1,3 +1,18 @@
+CloudSOC-OpenSource
+This is a Project Designed for Security Analysts and all SOC audiences who wants to play with implementation and explore the Modern CloudSOC architecture. All of the componenets are used based on Open Source Projects(Availabe at the time of first commit).
+
+NOTE - This is an Ongoing Project and the repo will be updated as we work on the new additions.
+
+This Projects serves below usecases:
+
+Collect Cloud/onprem Data to a Single Place.
+Normalize and Parse Data
+Visualize Data and prepare meaningful Security Analytics
+Create Incidents/Cases out of Security Alerts identified based on collected data/logs
+Enrich Data feeds with Open Source Threat Intelligence Platoform
+Automate process of Threat Hunt, Creation of actionable Playbooks, SOC data Analytics
+
+
 ### Step-by-Step Instructions
 
 1. **Clone the Repository on All EC2 Instances:**
