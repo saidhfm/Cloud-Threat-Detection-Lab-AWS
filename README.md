@@ -342,6 +342,10 @@ To deploy MISP (Malware Information Sharing Platform) and integrate it with Elas
 1. **Deploy MISP**:
     - Use the Docker file provided in the repository. use “docker compose -f cribil.yml up -d”
     - Follow the instructions in the repository to ensure MISP is running correctly.
+        
+        Source - https://github.com/NUKIB/misp/tree/main
+        #change ports to 0.0.0.0 and base url to public ip
+        
 2. **Obtain MISP API Key**:
     - Log in to the MISP web interface.
     - Navigate to **Sync Actions** > **Feeds**.
