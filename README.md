@@ -457,16 +457,20 @@ This setup allows Cribl to send events and logs to New Relic for monitoring and 
 
 We welcome your contributions. Please feel free to fork the code, play with it, make some patches and send us pull requests.
 
-**🔼Enhancements:**
+**Enhancements:**
 
 - We will keep on updating this repo with the new implementation.
 
-**🙏Support**
+**Issues**
 
-- Please [open an issue on GitHub]([https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS/issues]](https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS/issues) if you'd like to report a bug or request a feature.
+- Please [open an issue on GitHub]([https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS/issues]](https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS/issues)
+- if you'd like to report a bug or request a feature.
+- 
 
-References used:
-https://github.com/peasead/elastic-container
-https://github.com/NUKIB/misp/tree/main
+
+References:
+
+https://github.com/peasead/elastic-container,
+https://github.com/NUKIB/misp/tree/main,
 https://github.com/sakshamtushar/thor-detection-lab
 
