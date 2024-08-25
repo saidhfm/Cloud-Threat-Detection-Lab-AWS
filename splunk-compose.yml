@@ -23,6 +23,3 @@ services:
       - "8088:8088"
       - "1514:1514"
       - "8089:8089"
-
-#docker compose -f splunk-compose.yml up -d
-#http://PIP:8000/
