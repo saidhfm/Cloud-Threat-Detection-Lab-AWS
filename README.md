@@ -138,12 +138,7 @@ By following these steps, you should successfully deploy Elasticsearch, Kibana, 
 - Add **Elastic Defend EDR** as an integration.
 - Provide a name for the integration and save it.
 
-3. **Add a Windows Integration:**
-
-- Add another integration to the **Agent Policy**.
-- Choose **Windows** as the integration, give it a name, and save.
-
-4. **Deploy Elastic Agent on Windows:**
+3. **Deploy Elastic Agent on Windows:**
 
 - Go to the **Agent** section in Elastic.
 - Click **Add Agent** and select the policy you just created.
@@ -152,9 +147,11 @@ By following these steps, you should successfully deploy Elasticsearch, Kibana, 
 - Navigate to the **Downloads** folder and run the commands one by one.
 - If there are errors, download the agent manually, unzip it, and then run the enrollment command.
 
-5. **Deploy Elastic Agent on Linux:**
-
-- Download the Elastic Agent package:
+4. **Deploy Elastic Agent on Linux:**
+- Go to the **Agent** section in Elastic.
+- Click **Add Agent** and select the policy you just created.
+- Copy the command for Linux deployment.
+- Run the commands on the linux host.
     
     ```bash
     
@@ -180,7 +177,6 @@ By following these steps, you should successfully deploy Elasticsearch, Kibana, 
     
     ```
     
-
 ### **Note:**
 
 - Using `-insecure` means you are sending logs without TLS encryption, which is essential for insecure connections.
