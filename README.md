@@ -37,14 +37,14 @@ The project aims to empower SOC teams to leverage open-source tools effectively 
 - Run the script to install dependencies:
     
     ```bash
-    bash Cloud-Threat-Detection-Lab/docker.sh
+    bash Cloud-Threat-Detection-Lab/docker-prereq.sh
     ```
     
 - This will set up all necessary tools and configurations for the environment.
 
 3. **Deploy Elasticsearch, Kibana, and Fleet Server:**
 
-- **Connect to the ELK Instance**:
+- **Connect to the Instance**:
     - SSH into the EC2 instance designated for ELK.
 - **Modify the `.env` File**:
     - Locate the `.env` file in the ELK setup directory.
