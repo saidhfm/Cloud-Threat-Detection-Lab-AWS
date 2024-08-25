@@ -1,18 +1,25 @@
-CloudSOC-OpenSource
-This is a Project Designed for Security Analysts and all SOC audiences who wants to play with implementation and explore the Modern CloudSOC architecture. All of the componenets are used based on Open Source Projects(Availabe at the time of first commit).
+CloudSOC-OpenSource is a project designed for security analysts and SOC (Security Operations Center) professionals interested in implementing and exploring a modern CloudSOC architecture using open-source tools. The project is ongoing, with continuous updates and new additions to the repository.
 
-NOTE - This is an Ongoing Project and the repo will be updated as we work on the new additions.
+Key Use Cases of CloudSOC-OpenSource:
+Data Collection:
 
-This Projects serves below usecases:
+Aggregates cloud and on-premises data into a single platform for unified analysis.
+Data Normalization and Parsing:
 
-Collect Cloud/onprem Data to a Single Place.
-Normalize and Parse Data
-Visualize Data and prepare meaningful Security Analytics
-Create Incidents/Cases out of Security Alerts identified based on collected data/logs
-Enrich Data feeds with Open Source Threat Intelligence Platoform
-Automate process of Threat Hunt, Creation of actionable Playbooks, SOC data Analytics
+Normalizes and parses the collected data to standardize various data formats, making it easier to analyze and compare.
+Data Visualization and Security Analytics:
 
+Visualizes normalized data to provide insightful security analytics, helping analysts understand and interpret security events.
+Incident and Case Management:
 
+Automates the creation of incidents or cases from security alerts detected in the collected data or logs, facilitating quicker response and investigation.
+Threat Intelligence Integration:
+
+Enhances data analysis with enrichment from open-source threat intelligence platforms, providing additional context and improving threat detection capabilities.
+Automation of SOC Processes:
+
+Automates threat hunting processes, creation of actionable playbooks, and SOC data analytics to improve efficiency and reduce manual workloads.
+The project aims to empower SOC teams to leverage open-source tools effectively for comprehensive threat detection, response, and security management.
 ### Step-by-Step Instructions
 
 1. **Clone the Repository on All EC2 Instances:**
