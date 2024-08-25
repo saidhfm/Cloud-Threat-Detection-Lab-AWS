@@ -1,5 +1,3 @@
-# Cloud-Threat-Detection-Lab
-
 ### Step-by-Step Instructions
 
 1. **Clone the Repository on All EC2 Instances:**
@@ -342,7 +340,7 @@ By following these steps, you'll successfully send VPC flow logs from AWS to Ela
 To deploy MISP (Malware Information Sharing Platform) and integrate it with Elasticsearch, follow these steps:
 
 1. **Deploy MISP**:
-    - Use the Docker file provided in the repository.
+    - Use the Docker file provided in the repository. use “docker compose -f cribil.yml up -d”
     - Follow the instructions in the repository to ensure MISP is running correctly.
 2. **Obtain MISP API Key**:
     - Log in to the MISP web interface.
@@ -368,7 +366,7 @@ Below are the sample deployment where agents configured for each policy.
 
 **To deploy and configure Cribl on the same instance as ELK (Elasticsearch, Logstash, Kibana):**
 
-1. **Deploy Cribl**: Deploy Cribl on the ELK instance.Use docker file in the repo.
+1. **Deploy Cribl**: Deploy Cribl on the ELK instance.Use docker compose -f cribil.yml up -d
 2. **Access Cribl**: Open a web browser and go to `http://<public>:9000` to access Cribl's web interface.
 3. **Configure Cribl Input**:
     - Navigate to **Sources** in Cribl.
@@ -386,7 +384,7 @@ This setup allows Cribl to collect data from Elasticsearch and route it to the d
 
 **To deploy and configure Splunk to receive data from Cribl:**
 
-1. **Deploy Splunk**: Deploy Splunk using container yaml in the repo on a instance.
+1. **Deploy Splunk**: Deploy Splunk using container yaml in the repo on a instance. docker compose -f splunk.yml up -d
 2. **Configure Cribl Destination**:
     - In Cribl, navigate to **Destinations**.
     - Select **Add Destination** and choose **Splunk**.
