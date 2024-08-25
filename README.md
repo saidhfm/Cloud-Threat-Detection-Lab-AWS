@@ -1,25 +1,22 @@
-CloudSOC-OpenSource is a project designed for security analysts and SOC (Security Operations Center) professionals interested in implementing and exploring a modern CloudSOC architecture using open-source tools. The project is ongoing, with continuous updates and new additions to the repository.
+**CloudSOC-OpenSource** is a project designed for security analysts and SOC (Security Operations Center) professionals interested in implementing and exploring a modern CloudSOC architecture using open-source tools. The project is ongoing, with continuous updates and new additions to the repository.
 
-Key Use Cases of CloudSOC-OpenSource:
-Data Collection:
+### Key Use Cases of CloudSOC-OpenSource:
 
-Aggregates cloud and on-premises data into a single platform for unified analysis.
-Data Normalization and Parsing:
+1. **Data Collection**:
+    - Aggregates cloud and on-premises data into a single platform for unified analysis.
+2. **Data Normalization and Parsing**:
+    - Normalizes and parses the collected data to standardize various data formats, making it easier to analyze and compare.
+3. **Data Visualization and Security Analytics**:
+    - Visualizes normalized data to provide insightful security analytics, helping analysts understand and interpret security events.
+4. **Incident and Case Management**:
+    - Automates the creation of incidents or cases from security alerts detected in the collected data or logs, facilitating quicker response and investigation.
+5. **Threat Intelligence Integration**:
+    - Enhances data analysis with enrichment from open-source threat intelligence platforms, providing additional context and improving threat detection capabilities.
+6. **Automation of SOC Processes**:
+    - Automates threat hunting processes, creation of actionable playbooks, and SOC data analytics to improve efficiency and reduce manual workloads.
 
-Normalizes and parses the collected data to standardize various data formats, making it easier to analyze and compare.
-Data Visualization and Security Analytics:
-
-Visualizes normalized data to provide insightful security analytics, helping analysts understand and interpret security events.
-Incident and Case Management:
-
-Automates the creation of incidents or cases from security alerts detected in the collected data or logs, facilitating quicker response and investigation.
-Threat Intelligence Integration:
-
-Enhances data analysis with enrichment from open-source threat intelligence platforms, providing additional context and improving threat detection capabilities.
-Automation of SOC Processes:
-
-Automates threat hunting processes, creation of actionable playbooks, and SOC data analytics to improve efficiency and reduce manual workloads.
 The project aims to empower SOC teams to leverage open-source tools effectively for comprehensive threat detection, response, and security management.
+
 ### Step-by-Step Instructions
 
 1. **Clone the Repository on All EC2 Instances:**
