@@ -1,3 +1,4 @@
+sysmon installation on windows
 sysmon download
 sysmon64 -accepteula -i c:\windows\config.xml(https://github.com/olafhartong/sysmon-modular)
 sysmon64 -accepteula -i ./sysmonconfig-research.xml
@@ -6,8 +7,7 @@ ami-04df9ee4d3dfde202
 
 ----------
 
-Linux:
-In this example, I install on Ubuntu 22.04
+install on Ubuntu 22.04
 
 # 1. Register Microsoft key and feed
 wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
