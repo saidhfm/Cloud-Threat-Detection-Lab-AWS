@@ -27,12 +27,3 @@ volumes:
 networks:
   cribl_network:
     driver: bridge
-
-
- #docker compose -f compose.yml up -d
-
- #access on http://[pip]:9000 port
- #admin,admin - deafult-> login first do this
-#i have addedd 9111 port to add in elastic settings - http://172.36.119:9111
-#admin,Password123@
-
