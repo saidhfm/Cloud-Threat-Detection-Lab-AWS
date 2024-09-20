@@ -17,6 +17,9 @@ Resources:
           Ebs:
             VolumeSize: 300
             VolumeType: gp2
+      Tags:
+        - Key: Name
+          Value: "ELK-Splunk-Misp-Cribil" # Instance  name
       UserData:
         Fn::Base64: |
           #!/bin/bash
