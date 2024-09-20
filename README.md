@@ -386,6 +386,7 @@ To deploy MISP (Malware Information Sharing Platform) and integrate it with Elas
     - This will allow Elasticsearch to collect and analyze threat intelligence data from MISP.
 
 By following these steps, you will have MISP deployed and integrated with Elasticsearch, enabling seamless data sharing and enhanced threat detection capabilities.
+http://pip:8080
 
 Below are the sample deployment where agents configured for each policy.
 
