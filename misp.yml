@@ -53,7 +53,7 @@ services:
       MYSQL_PASSWORD: password # Please change for production
       MYSQL_DATABASE: misp
       REDIS_HOST: redis
-      MISP_BASEURL: http://PIP:8080
+      MISP_BASEURL: http://0.0.0.0:8080
       MISP_UUID: 0a674a5a-c4cb-491d-80cf-5adb48b5c1cd # Please change for production
       MISP_ORG: Testing org # Please change for production
       MISP_MODULE_URL: http://misp-modules
