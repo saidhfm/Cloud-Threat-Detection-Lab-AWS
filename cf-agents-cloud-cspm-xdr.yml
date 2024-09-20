@@ -1,0 +1,254 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template to create 3 EC2 instances with Docker, Sysmon, and additional installation.
+
+Resources:
+  ELKInstance1:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: "t2.medium"
+      ImageId: "ami-0e86e20dae9224db8"
+      KeyName: "nvtlab"
+      IamInstanceProfile: "test"
+      SecurityGroupIds:
+        - "sg-01319f53d935d35fd"
+      SubnetId: "subnet-0d59355bcac099acb"
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sda1"
+          Ebs:
+            VolumeSize: 300
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          # Log the output to a file for troubleshooting
+          exec > /var/log/user-data.log 2>&1
+          set -x
+
+          # Update package list and install necessary packages
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl unzip apt-transport-https git build-essential gcc make
+
+          # Add Docker's official GPG key
+          sudo install -m 0755 -d /etc/apt/keyrings
+          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+          sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+          # Add the Docker repository to Apt sources
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+            $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+          # Update package list again and install Docker
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+          # Start Docker service
+          sudo systemctl start docker
+          sudo systemctl enable docker
+
+          # Install AWS CLI
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          rm -rf awscliv2.zip aws/
+
+          # Register Microsoft key and feed for Sysmon for Linux
+          wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
+          sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
+          wget -q https://packages.microsoft.com/config/debian/11/prod.list
+          sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
+          sudo chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
+          sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
+
+          # Install Sysmon for Linux
+          sudo apt-get update
+          sudo apt-get install -y sysmonforlinux
+
+          # Clone the Cloud Threat Detection Lab repository
+          cd /home/ubuntu
+          git clone https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS.git
+
+          # Additional installation steps
+          git clone https://github.com/nikdubois/vsftpd-2.3.4-infected.git
+          cd vsftpd-2.3.4-infected/
+          sed -i 's/^LINK.*/LINK    =       -Wl,-s,-lcrypt/' Makefile  # Modify the Makefile
+          chmod 777 vsf_findlibs.sh
+          make
+
+          # Configure and copy vsftpd files
+          sudo cp vsftpd /usr/local/sbin/vsftpd
+          sudo cp vsftpd.8 /usr/local/man/man8
+          sudo cp vsftpd.conf.5 /usr/local/man/man5
+          sudo cp vsftpd.conf /etc
+
+          # Setup FTP directories and users
+          mkdir /var/ftp/
+          useradd -d /var/ftp ftp
+          chown root:root /var/ftp
+          chmod og-w /var/ftp
+
+          # Create the secure directory for vsftpd
+          mkdir -p /var/share/empty
+          echo "secure_chroot_dir=/var/share/empty" >> /etc/vsftpd.conf
+
+          # Uncomment local_enable and write_enable in /etc/vsftpd.conf
+          sudo sed -i 's/^#local_enable=YES/local_enable=YES/' /etc/vsftpd.conf
+          sudo sed -i 's/^#write_enable=YES/write_enable=YES/' /etc/vsftpd.conf
+
+          # Start vsftpd service
+          /usr/local/sbin/vsftpd &
+
+          aws ec2 modify-instance-metadata-options --instance-id $(TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+          curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id) --http-tokens optional --http-endpoint enabled --http-put-response-hop-limit 1
+
+          cd /home/ubuntu/Cloud-Threat-Detection-Lab-AWS/dsvw
+          python3 dsvw.py
+
+  ELKInstance2:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: "t2.medium"
+      ImageId: "ami-0e86e20dae9224db8"
+      KeyName: "nvtlab"
+      IamInstanceProfile: "test"
+      SecurityGroupIds:
+        - "sg-01319f53d935d35fd"
+      SubnetId: "subnet-0d59355bcac099acb"
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sda1"
+          Ebs:
+            VolumeSize: 300
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          # Log the output to a file for troubleshooting
+          exec > /var/log/user-data.log 2>&1
+          set -x
+
+          # Update package list and install necessary packages
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl unzip apt-transport-https git build-essential gcc make
+
+          # Add Docker's official GPG key
+          sudo install -m 0755 -d /etc/apt/keyrings
+          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+          sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+          # Add the Docker repository to Apt sources
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+            $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+          # Update package list again and install Docker
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+          # Start Docker service
+          sudo systemctl start docker
+          sudo systemctl enable docker
+
+          # Install AWS CLI
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          rm -rf awscliv2.zip aws/
+
+          # Register Microsoft key and feed for Sysmon for Linux
+          wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
+          sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
+          wget -q https://packages.microsoft.com/config/debian/11/prod.list
+          sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
+          sudo chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
+          sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
+
+          # Install Sysmon for Linux
+          sudo apt-get update
+          sudo apt-get install -y sysmonforlinux
+
+          # Clone the Cloud Threat Detection Lab repository
+          cd /home/ubuntu
+          git clone https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS.git
+
+          cd /home/ubuntu/Cloud-Threat-Detection-Lab-AWS/dsvw
+          python3 dsvw.py
+
+  ELKInstance3:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: "t2.medium"
+      ImageId: "ami-0e86e20dae9224db8"
+      KeyName: "nvtlab"
+      IamInstanceProfile: "test"
+      SecurityGroupIds:
+        - "sg-01319f53d935d35fd"
+      SubnetId: "subnet-0d59355bcac099acb"
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sda1"
+          Ebs:
+            VolumeSize: 300
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          # Log the output to a file for troubleshooting
+          exec > /var/log/user-data.log 2>&1
+          set -x
+
+          # Update package list and install necessary packages
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl unzip apt-transport-https git build-essential gcc make
+
+          # Add Docker's official GPG key
+          sudo install -m 0755 -d /etc/apt/keyrings
+          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+          sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+          # Add the Docker repository to Apt sources
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+            $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+          # Update package list again and install Docker
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+          # Start Docker service
+          sudo systemctl start docker
+          sudo systemctl enable docker
+
+          # Install AWS CLI
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          rm -rf awscliv2.zip aws/
+
+          # Register Microsoft key and feed for Sysmon for Linux
+          wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
+          sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
+          wget -q https://packages.microsoft.com/config/debian/11/prod.list
+          sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
+          sudo chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
+          sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
+
+          # Install Sysmon for Linux
+          sudo apt-get update
+          sudo apt-get install -y sysmonforlinux
+
+          # Clone the Cloud Threat Detection Lab repository
+          cd /home/ubuntu
+          git clone https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS.git
+
+Outputs:
+  InstanceId1:
+    Description: "Instance ID of the first EC2 instance"
+    Value: !Ref ELKInstance1
+  InstanceId2:
+    Description: "Instance ID of the second EC2 instance"
+    Value: !Ref ELKInstance2
+  InstanceId3:
+    Description: "Instance ID of the third EC2 instance"
+    Value: !Ref ELKInstance3
