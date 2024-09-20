@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template to create an SQS queue with access policy for an existing S3 bucket.
+
+Resources:
+  # Create SQS Queue for receiving S3 event notifications
+  SQSQueue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName: "MyS3EventsQueue"
+      VisibilityTimeout: 60  # Set visibility timeout in seconds
+
+  # SQS Access Policy to allow the S3 bucket (cloudtrail-logs-jhjkh787) to send messages to the SQS queue
+  SQSPolicy:
+    Type: "AWS::SQS::QueuePolicy"
+    Properties:
+      Queues:
+        - !Ref SQSQueue
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "AllowS3SendMessage"
+            Effect: "Allow"
+            Principal:
+              Service: "s3.amazonaws.com"
+            Action: "SQS:SendMessage"
+            Resource: !GetAtt SQSQueue.Arn
+            Condition:
+              ArnLike:
+                "aws:SourceArn": "arn:aws:s3:::cloudtrail-logs-jhjkh787"
+
+Outputs:
+  SQSQueueURL:
+    Description: "URL of the SQS queue"
+    Value: !Ref SQSQueue
+
+  SQSQueueArn:
+    Description: "ARN of the SQS queue"
+    Value: !GetAtt SQSQueue.Arn

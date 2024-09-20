@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template to add S3 bucket event notifications to an existing S3 bucket.
+
+Resources:
+  # Lambda execution role for setting up S3 event notifications
+  LambdaExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: "S3BucketNotificationPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "s3:PutBucketNotification"
+                Resource: "arn:aws:s3:::cloudtrail-logs-jhjkh787"
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "arn:aws:logs:*:*:*"
+
+  # Lambda function to configure S3 bucket notification on the existing bucket
+  ConfigureS3BucketNotification:
+    Type: "AWS::Lambda::Function"
+    Properties: 
+      Handler: "index.handler"
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          import boto3
+          import json
+          import cfnresponse
+
+          def handler(event, context):
+              s3 = boto3.client('s3')
+              bucket_name = 'cloudtrail-logs-jhjkh787'
+              queue_arn = 'arn:aws:sqs:us-east-1:430621755003:MyS3EventsQueue'
+
+              try:
+                  s3.put_bucket_notification_configuration(
+                      Bucket=bucket_name,
+                      NotificationConfiguration={
+                          'QueueConfigurations': [
+                              {
+                                  'QueueArn': queue_arn,
+                                  'Events': [
+                                      's3:ObjectCreated:*',
+                                      's3:ObjectRemoved:*',
+                                      's3:ObjectRestore:*',
+                                      's3:Replication:*',
+                                      's3:ReducedRedundancyLostObject'
+                                  ]
+                              }
+                          ]
+                      }
+                  )
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+              except Exception as e:
+                  print(f"Error: {e}")
+                  cfnresponse.send(event, context, cfnresponse.FAILED, {})
+      Runtime: "python3.8"
+      Timeout: 60
+
+  # Custom resource to trigger Lambda function to configure the S3 bucket notifications
+  S3BucketNotificationCustomResource:
+    Type: "Custom::S3BucketNotification"
+    Properties:
+      ServiceToken: !GetAtt ConfigureS3BucketNotification.Arn
+
+Outputs:
+  SQSQueueARN:
+    Description: "ARN of the SQS queue"
+    Value: "arn:aws:sqs:us-east-1:430621755003:MyS3EventsQueue"
+
+  BucketName:
+    Description: "Name of the existing S3 bucket"
+    Value: "cloudtrail-logs-jhjkh787"

@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template to create a CloudTrail with an S3 bucket for log storage and the correct bucket policy.
+
+Resources:
+  # Create S3 bucket for CloudTrail logs
+  CloudTrailS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Sub "cloudtrail-logs-jhjkh787"
+      VersioningConfiguration:
+        Status: "Enabled"  # Enable versioning for log integrity
+
+  # S3 Bucket Policy to allow CloudTrail to write logs to S3
+  S3BucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket: !Ref CloudTrailS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "AllowCloudTrailToWrite"
+            Effect: "Allow"
+            Principal:
+              Service: "cloudtrail.amazonaws.com"
+            Action: "s3:PutObject"
+            Resource: !Sub "arn:aws:s3:::${CloudTrailS3Bucket}/AWSLogs/${AWS::AccountId}/*"
+            Condition:
+              StringEquals:
+                "s3:x-amz-acl": "bucket-owner-full-control"
+
+          - Sid: "AllowCloudTrailReadAccess"
+            Effect: "Allow"
+            Principal:
+              Service: "cloudtrail.amazonaws.com"
+            Action: "s3:GetBucketAcl"
+            Resource: !Sub "arn:aws:s3:::${CloudTrailS3Bucket}"
+
+  # Create the CloudTrail
+  CloudTrail:
+    Type: "AWS::CloudTrail::Trail"
+    Properties:
+      TrailName: "MyCloudTrail"
+      S3BucketName: !Ref CloudTrailS3Bucket  # Specify the created S3 bucket for log storage
+      IsMultiRegionTrail: true
+      IncludeGlobalServiceEvents: true
+      EnableLogFileValidation: true  # Enable log file validation for security
+      IsLogging: true
+      EventSelectors:
+        - ReadWriteType: All
+          IncludeManagementEvents: true
+
+Outputs:
+  CloudTrailName:
+    Description: "Name of the CloudTrail"
+    Value: !Ref CloudTrail
+
+  S3BucketName:
+    Description: "Name of the S3 bucket for CloudTrail logs"
+    Value: !Ref CloudTrailS3Bucket
