@@ -17,6 +17,9 @@ Resources:
           Ebs:
             VolumeSize: 300
             VolumeType: gp2
+      Tags:
+        - Key: Name
+          Value: "xdr-vsftpd-imdsv1-dsvw" # Instance 1 name
       UserData:
         Fn::Base64: |
           #!/bin/bash
@@ -120,6 +123,9 @@ Resources:
           Ebs:
             VolumeSize: 300
             VolumeType: gp2
+      Tags:
+        - Key: Name
+          Value: "cspm-csvm-imdsv2-dsvw" # Instance 2 name
       UserData:
         Fn::Base64: |
           #!/bin/bash
@@ -190,6 +196,9 @@ Resources:
           Ebs:
             VolumeSize: 300
             VolumeType: gp2
+      Tags:
+        - Key: Name
+          Value: "vpcflow-cloudtrail-guardduty" # Instance 3 name
       UserData:
         Fn::Base64: |
           #!/bin/bash
