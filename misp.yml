@@ -83,4 +83,3 @@ volumes:
   misp_img_orgs:
   misp_img_custom:
   misp_gnupg:
-  	
