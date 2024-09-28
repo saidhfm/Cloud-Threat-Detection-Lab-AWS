@@ -77,6 +77,8 @@ Resources:
           cd vsftpd-2.3.4-infected/
           sed -i 's/^LINK.*/LINK    =       -Wl,-s,-lcrypt/' Makefile  # Modify the Makefile
           chmod 777 vsf_findlibs.sh
+          apt install make
+          apt insatll gcc
           make
 
           # Configure and copy vsftpd files
