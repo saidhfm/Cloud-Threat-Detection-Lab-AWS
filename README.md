@@ -37,7 +37,9 @@ The project aims to empower SOC teams to leverage open-source tools effectively 
 - Run the script to install dependencies:
     
     ```bash
-    bash Cloud-Threat-Detection-Lab/docker-prereq.sh
+      cd Cloud-Threat-Detection-Lab/
+     chmod +x elastic-container.sh
+     ./elastic-container.sh start
     ```
     
 - This will set up all necessary tools and configurations for the environment.
