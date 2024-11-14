@@ -5,7 +5,7 @@ Parameters:
   InstanceType1:
     Description: "EC2 Instance type for the first instance"
     Type: String
-    Default: "t2.medium"
+    Default: "t2.large"
     AllowedValues:
       - t2.micro
       - t2.small
