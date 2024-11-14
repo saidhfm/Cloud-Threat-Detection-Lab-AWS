@@ -6,7 +6,7 @@ volumes:
 
 services:
   splunkenterprise:
-    container_name: splunk-thorlab
+    container_name: splunk-lab
     hostname: splunkenterprise
     image: splunk/splunk:latest
     restart: unless-stopped
