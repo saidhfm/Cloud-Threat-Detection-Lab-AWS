@@ -31,7 +31,7 @@ Parameters:
   InstanceType3:
     Description: "EC2 Instance type for the third instance"
     Type: String
-    Default: "t3.small"
+    Default: "t2.micro"
     AllowedValues:
       - t2.micro
       - t2.small
@@ -41,14 +41,49 @@ Parameters:
       - t3.small
     ConstraintDescription: "Must be a valid EC2 instance type."
 
+  ImageId1:
+    Description: "AMI ID for the first EC2 instance"
+    Type: String
+
+  ImageId2:
+    Description: "AMI ID for the second EC2 instance"
+    Type: String
+
+  ImageId3:
+    Description: "AMI ID for the third EC2 instance"
+    Type: String
+
+  VolumeSize1:
+    Description: "Volume size for the first EC2 instance in GB"
+    Type: Number
+    Default: 300
+    MinValue: 8
+    MaxValue: 16384
+
+  VolumeSize2:
+    Description: "Volume size for the second EC2 instance in GB"
+    Type: Number
+    Default: 300
+    MinValue: 8
+    MaxValue: 16384
+
+  VolumeSize3:
+    Description: "Volume size for the third EC2 instance in GB"
+    Type: Number
+    Default: 300
+    MinValue: 8
+    MaxValue: 16384
+
   KeyName:
     Description: "Name of an existing EC2 KeyPair to enable SSH access to the instances"
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: "Must be the name of an existing EC2 KeyPair."
 
   IamInstanceProfile:
-    Description: "The IAM Instance Profile to associate with the EC2 instances"
+    Description: "Enter the IAM Instance Profile name to associate with the EC2 instances. Common options: Role1, Role2, Role3, Role4."
     Type: String
+    Default: "ec2roleadmin"
+    ConstraintDescription: "Must be the name of an existing IAM role."
 
   SecurityGroupId:
     Description: "The Security Group ID to associate with the EC2 instances"
@@ -58,43 +93,17 @@ Parameters:
     Description: "The Subnet ID in which to launch the EC2 instances"
     Type: AWS::EC2::Subnet::Id
 
-  ImageId1:
-    Description: "AMI ID for the first EC2 instance"
-    Type: AWS::EC2::Image::Id
-    Default: "ami-0e86e20dae9224db8"
-  
-  VolumeSize1:
-    Description: "Volume size for the first EC2 instance in GB"
-    Type: Number
-    Default: 300
-    MinValue: 8
-    MaxValue: 16384
-
-  ImageId2:
-    Description: "AMI ID for the second EC2 instance"
-    Type: AWS::EC2::Image::Id
-    Default: "ami-0e86e20dae9224db8"
-  
-  VolumeSize2:
-    Description: "Volume size for the second EC2 instance in GB"
-    Type: Number
-    Default: 300
-    MinValue: 8
-    MaxValue: 16384
-
-  ImageId3:
-    Description: "AMI ID for the third EC2 instance"
-    Type: AWS::EC2::Image::Id
-    Default: "ami-0e86e20dae9224db8"
-  
-  VolumeSize3:
-    Description: "Volume size for the third EC2 instance in GB"
-    Type: Number
-    Default: 300
-    MinValue: 8
-    MaxValue: 16384
-
 Resources:
+  ElasticIP1:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  ElasticIP2:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
   ELKInstance1:
     Type: "AWS::EC2::Instance"
     Properties:
@@ -112,7 +121,7 @@ Resources:
             VolumeType: gp2
       Tags:
         - Key: Name
-          Value: "xdr-vsftpd-imdsv1-dsvw"
+          Value: "elk-cribil"
       UserData:
         Fn::Base64: |
           #!/bin/bash
@@ -142,6 +151,18 @@ Resources:
           sudo apt-get install -y sysmonforlinux
           cd /home/ubuntu
           git clone https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS.git
+          cd Cloud-Threat-Detection-Lab-AWS
+          chmod 777 *
+          cd ELK
+          chmod 777 *
+          ./elastic-container.sh start
+          docker compose -f cribil.yml up -d
+
+  EIPAssociation1:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      InstanceId: !Ref ELKInstance1
+      EIP: !Ref ElasticIP1
 
   ELKInstance2:
     Type: "AWS::EC2::Instance"
@@ -160,7 +181,66 @@ Resources:
             VolumeType: gp2
       Tags:
         - Key: Name
-          Value: "cspm-csvm-imdsv2-dsvw"
+          Value: "splunk"
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          exec > /var/log/user-data.log 2>&1
+          set -x
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl unzip apt-transport-https git build-essential gcc make
+          sudo install -m 0755 -d /etc/apt/keyrings
+          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+          sudo chmod a+r /etc/apt/keyrings/docker.asc
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          rm -rf awscliv2.zip aws/
+          wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
+          sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
+          wget -q https://packages.microsoft.com/config/debian/11/prod.list
+          sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
+          sudo chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
+          sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
+          sudo apt-get update
+          sudo apt-get install -y sysmonforlinux
+          cd /home/ubuntu
+          git clone https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS.git
+          cd Cloud-Threat-Detection-Lab-AWS
+          chmod 777 *
+          cd ELK
+          chmod 777 *
+          docker compose -f splunk.yml up -d
+
+  EIPAssociation2:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      InstanceId: !Ref ELKInstance2
+      EIP: !Ref ElasticIP2
+
+  ELKInstance3:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: !Ref InstanceType3
+      ImageId: !Ref ImageId3
+      KeyName: !Ref KeyName
+      IamInstanceProfile: !Ref IamInstanceProfile
+      SecurityGroupIds:
+        - !Ref SecurityGroupId
+      SubnetId: !Ref SubnetId
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sda1"
+          Ebs:
+            VolumeSize: !Ref VolumeSize3
+            VolumeType: gp2
+      Tags:
+        - Key: Name
+          Value: "agent"
       UserData:
         Fn::Base64: |
           #!/bin/bash
@@ -191,51 +271,19 @@ Resources:
           cd /home/ubuntu
           git clone https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS.git
 
-  ELKInstance3:
-    Type: "AWS::EC2::Instance"
-    Properties:
-      InstanceType: !Ref InstanceType3
-      ImageId: !Ref ImageId3
-      KeyName: !Ref KeyName
-      IamInstanceProfile: !Ref IamInstanceProfile
-      SecurityGroupIds:
-        - !Ref SecurityGroupId
-      SubnetId: !Ref SubnetId
-      BlockDeviceMappings:
-        - DeviceName: "/dev/sda1"
-          Ebs:
-            VolumeSize: !Ref VolumeSize3
-            VolumeType: gp2
-      Tags:
-        - Key: Name
-          Value: "vpcflow-cloudtrail-guardduty"
-      UserData:
-        Fn::Base64: |
-          #!/bin/bash
-          exec > /var/log/user-data.log 2>&1
-          set -x
-          sudo apt-get update
-          sudo apt-get install -y ca-certificates curl unzip apt-transport-https git build-essential gcc make
-          sudo install -m 0755 -d /etc/apt/keyrings
-          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-          sudo chmod a+r /etc/apt/keyrings/docker.asc
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-          sudo systemctl start docker
-          sudo systemctl enable docker
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-          rm -rf awscliv2.zip aws/
-
 Outputs:
   InstanceId1:
     Description: "Instance ID of the first EC2 instance"
     Value: !Ref ELKInstance1
+  ElasticIP1:
+    Description: "Elastic IP associated with the first instance"
+    Value: !Ref ElasticIP1
   InstanceId2:
     Description: "Instance ID of the second EC2 instance"
     Value: !Ref ELKInstance2
+  ElasticIP2:
+    Description: "Elastic IP associated with the second instance"
+    Value: !Ref ElasticIP2
   InstanceId3:
     Description: "Instance ID of the third EC2 instance"
     Value: !Ref ELKInstance3
