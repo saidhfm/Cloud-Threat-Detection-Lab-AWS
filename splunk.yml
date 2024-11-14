@@ -10,7 +10,6 @@ services:
     hostname: splunkenterprise
     image: splunk/splunk:latest
     restart: unless-stopped
-    mem_limit: 2G
     environment:
       - SPLUNK_START_ARGS=--accept-license
       - SPLUNK_ENABLE_LISTEN=9997
