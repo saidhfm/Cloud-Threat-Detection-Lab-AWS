@@ -409,6 +409,10 @@ Below are the sample deployment where agents configured for each policy.
 4. **Configure Elasticsearch Output in fleet settings**:
     - In the Elasticsearch interface, go to **Fleet** > **Settings**.
     - In the **Outputs** section, add another URL: `http://<private_ip_of_elk>:9111`.
+      ex:
+        "host": "13.202.105.25",
+        "port": 9997,
+        "tls": false
     
     ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/eb6bc734-04fb-4aec-aff8-1f9952555e6b/a2b56604-fd38-4b04-ab02-0e811587f3e0/image.png)
     
