@@ -156,6 +156,7 @@ Resources:
           cd ELK
           chmod 777 *
           ./elastic-container.sh start
+          cd ..
           docker compose -f cribil.yml up -d
 
   EIPAssociation1:
@@ -212,8 +213,6 @@ Resources:
           cd /home/ubuntu
           git clone https://github.com/saidhfm/Cloud-Threat-Detection-Lab-AWS.git
           cd Cloud-Threat-Detection-Lab-AWS
-          chmod 777 *
-          cd ELK
           chmod 777 *
           docker compose -f splunk.yml up -d
 
