@@ -404,7 +404,7 @@ Below are the sample deployment where agents configured for each policy.
 3. **Configure Cribl Input**:
     - Navigate to **Sources** in Cribl.
     - Select **Elasticsearch** and click **Add New**.
-    - Name the input `elastic-input-9200` and set the host to `0.0.0.0`.
+    - Name the input `elastic-input-9200` and set the host to `0.0.0.0` and port to 9111.
     - Click **Save**.
 4. **Configure Elasticsearch Output in fleet settings**:
     - In the Elasticsearch interface, go to **Fleet** > **Settings**.
